@@ -1,18 +1,18 @@
 <template>
   <el-card>
-    <h2>Create Auction</h2>
+    <h2>发起拍卖</h2>
     <el-form @submit.prevent="createAuction">
-      <el-form-item label="Description">
+      <el-form-item label="描述">
         <el-input v-model="description" />
       </el-form-item>
-      <el-form-item label="Start Price (ETH)">
+      <el-form-item label="起价(ETH)">
         <el-input v-model.number="startPrice" />
       </el-form-item>
-      <el-form-item label="Duration (seconds)">
+      <el-form-item label="竞价时间(秒)">
         <el-input v-model.number="duration" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="createAuction">Create Auction</el-button>
+        <el-button type="primary" @click="createAuction">发起拍卖</el-button>
       </el-form-item>
     </el-form>
   </el-card>

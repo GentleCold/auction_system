@@ -1,13 +1,15 @@
 <template>
   <el-card>
     <h3>{{ props.item.description }}</h3>
-    <p>Start Price: {{ web3.utils.fromWei(props.item.startPrice, 'ether') }} ETH</p>
-    <p>Highest Bid: {{ web3.utils.fromWei(props.item.highestBid, 'ether') }} ETH</p>
-    <p>End Time: {{ new Date(props.item.endTime * 1000).toLocaleString() }}</p>
-    <p>State: {{ stateLabel }}</p>
-    <el-button v-if="props.item.state === '0'" type="primary" @click="openBidModal">Bid</el-button>
-    <el-button v-if="props.item.state === '1'" type="primary" @click="shipItem">Ship Item</el-button>
-    <el-button v-if="props.item.state === '2'" type="primary" @click="receiveItem">Receive Item</el-button>
+    <p>起价: {{ web3.utils.fromWei(props.item.startPrice, 'ether') }} ETH</p>
+    <p>当前最高价格: {{ web3.utils.fromWei(props.item.highestBid, 'ether') }} ETH</p>
+    <p>竞价结束时间: {{ new Date(props.item.endTime * 1000).toLocaleString() }}</p>
+    <p>拍卖状态: {{ stateLabel }}</p>
+    <div class="right-btn">
+      <el-button v-if="props.item.state === '0'" type="primary" @click="openBidModal">竞价</el-button>
+      <el-button v-if="props.item.state === '1'" type="primary" @click="shipItem">卖家发货</el-button>
+      <el-button v-if="props.item.state === '2'" type="primary" @click="receiveItem">买家收货</el-button>
+    </div>
     <bid-modal v-if="showBidModal" :item="props.item" @close="showBidModal = false" @bidPlaced="handleBidPlaced" />
   </el-card>
 </template>

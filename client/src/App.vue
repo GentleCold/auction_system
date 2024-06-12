@@ -16,3 +16,10 @@ export default {
   name: 'App',
 };
 </script>
+
+<style>
+.right-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>

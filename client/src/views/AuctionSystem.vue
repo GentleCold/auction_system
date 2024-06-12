@@ -2,22 +2,22 @@
   <div class="AuctionSystem">
     <el-container>
       <el-header>
-        <h1>Auction System</h1>
+        <h1>拍卖系统</h1>
       </el-header>
       <el-main>
         <create-auction @auctionCreated="fetchAuctions" />
         <el-divider></el-divider>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-select v-model="filterState" placeholder="Filter by state">
-              <el-option label="All" value=""></el-option>
-              <el-option label="In Progress" value="0"></el-option>
-              <el-option label="Awaiting Delivery" value="1"></el-option>
-              <el-option label="Awaiting Received" value="2"></el-option>
-              <el-option label="Completed" value="3"></el-option>
+            <el-select v-model="filterState" placeholder="过滤拍卖状态">
+              <el-option label="所有" value=""></el-option>
+              <el-option label="正在拍卖" value="0"></el-option>
+              <el-option label="等待发货" value="1"></el-option>
+              <el-option label="等待收货" value="2"></el-option>
+              <el-option label="拍卖完成" value="3"></el-option>
             </el-select>
-            <el-button @click="sortByPrice">Sort by Price</el-button>
-            <el-button @click="sortByParticipants">Sort by Participants</el-button>
+            <el-button @click="sortByPrice">根据价格降序</el-button>
+            <el-button @click="sortByParticipants">根据参与人数降序</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -59,9 +59,9 @@ const filteredItems = computed(() => {
   }
 
   if (sortType.value === 'price') {
-    items = items.sort((a, b) => b.startPrice - a.startPrice);
+    items = items.sort((a, b) => a.startPrice - b.startPrice);
   } else if (sortType.value === 'participants') {
-    items = items.sort((a, b) => b.participants - a.participants);
+    items = items.sort((a, b) => a.participants - b.participants);
   }
 
   return items;
@@ -79,4 +79,9 @@ onMounted(fetchAuctions);
 </script>
 
 <style>
+.el-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

@@ -1,11 +1,11 @@
 <template>
-  <el-dialog title="Place a Bid" v-model="visible" @close="handleClose">
+  <el-dialog title="发起竞价" v-model="visible" @close="handleClose">
     <el-form @submit.prevent="placeBid">
-      <el-form-item label="Bid Amount (ETH)">
+      <el-form-item label="竞价金额(ETH)">
         <el-input v-model.number="bidAmount" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="placeBid">Place Bid</el-button>
+        <el-button type="primary" @click="placeBid">发起竞价</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>

@@ -1,7 +1,7 @@
 <template>
-  <el-dialog title="Ship Item" :visible.sync="visible">
-    <p>Are you sure you want to ship this item?</p>
-    <el-button type="primary" @click="shipItem">Confirm</el-button>
+  <el-dialog title="卖家发货" :visible.sync="visible">
+    <p>请确认您已发货</p>
+    <el-button type="primary" @click="shipItem">确认</el-button>
   </el-dialog>
 </template>
 
