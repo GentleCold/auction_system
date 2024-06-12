@@ -17,9 +17,7 @@ const emit = defineEmits(['close', 'itemReceived']);
 const visible = ref(true);
 
 const receiveItem = async () => {
-  const accounts = await web3.eth.getAccounts();
-  
-  await auctionContract.methods.receiveItem(props.item.id).send({ from: accounts[0] });
+  await auctionContract.methods.receiveItem(props.item.id).send({ from: web3.currentProvider.selectedAddress });
   
   emit('itemReceived');
   emit('close');

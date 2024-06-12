@@ -40,13 +40,13 @@ const openBidModal = () => {
 
 const shipItem = async () => {
   const auctionContract = await getAuctionContract(web3);
-  await auctionContract.methods.shipItem(props.item.id).send({ from: accounts[0] });
+  await auctionContract.methods.shipItem(props.item.id).send({ from: web3.currentProvider.selectedAddress });
   $emit('itemShipped');
 };
 
 const receiveItem = async () => {
   const auctionContract = await getAuctionContract(web3);
-  await auctionContract.methods.receiveItem(props.item.id).send({ from: accounts[0] });
+  await auctionContract.methods.receiveItem(props.item.id).send({ from: web3.currentProvider.selectedAddress });
   $emit('itemReceived');
 };
 

@@ -30,9 +30,7 @@ watch(visible, (newValue) => {
 });
 
 const placeBid = async () => {
-  const accounts = await web3.eth.getAccounts();
-
-  await auctionContract.methods.bid(props.item.id).send({ from: accounts[0], value: web3.utils.toWei(String(bidAmount.value), 'ether') });
+  await auctionContract.methods.bid(props.item.id).send({ from: web3.currentProvider.selectedAddress, value: web3.utils.toWei(String(bidAmount.value), 'ether') });
 
   emit('bidPlaced');
   visible.value = false;

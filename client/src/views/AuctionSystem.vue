@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { web3, auctionContract } from '../utils/web3';
 import CreateAuction from '../components/CreateAuction.vue';
 import AuctionItem from '../components/AuctionItem.vue';

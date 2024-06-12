@@ -22,7 +22,6 @@ contract Auction {
 
     uint public itemCount;
     mapping(uint => Item) public items;
-    mapping(address => uint) public pendingReturns;
 
     function createAuction(
         string memory description,
@@ -50,24 +49,15 @@ contract Auction {
             msg.value >= item.startPrice,
             "Bid must be at least the start price."
         );
+        require(msg.sender != item.seller, "Cannot bid on your own item.");
 
         if (item.highestBidder != address(0)) {
-            pendingReturns[item.highestBidder] += item.highestBid;
+            // return back money
+            item.highestBidder.transfer(item.highestBid);
         }
 
         item.highestBidder = payable(msg.sender);
         item.highestBid = msg.value;
-    }
-
-    function withdraw() public {
-        uint amount = pendingReturns[msg.sender];
-        require(amount > 0, "No funds to withdraw.");
-
-        pendingReturns[msg.sender] = 0;
-
-        if (!payable(msg.sender).send(amount)) {
-            pendingReturns[msg.sender] = amount;
-        }
     }
 
     function endAuction(uint itemId) public {

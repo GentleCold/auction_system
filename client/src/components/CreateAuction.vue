@@ -27,9 +27,7 @@ const startPrice = ref(0);
 const duration = ref(0);
 
 const createAuction = async () => {
-  const accounts = await web3.eth.getAccounts();
-  
-  await auctionContract.methods.createAuction(description.value, web3.utils.toWei(String(startPrice.value), 'ether'), duration.value).send({ from: accounts[0] });
+  await auctionContract.methods.createAuction(description.value, web3.utils.toWei(String(startPrice.value), 'ether'), duration.value).send({ from: web3.currentProvider.selectedAddress });
   
   // Emit event to notify parent component
   $emit('auctionCreated');
