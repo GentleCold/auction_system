@@ -1,10 +1,18 @@
 <template>
   <el-card>
-    <h3>{{ props.item.description }}</h3>
-    <p>起价: {{ web3.utils.fromWei(props.item.startPrice, 'ether') }} ETH</p>
-    <p>当前最高价格: {{ web3.utils.fromWei(props.item.highestBid, 'ether') }} ETH</p>
-    <p>竞价结束时间: {{ new Date(props.item.endTime * 1000).toLocaleString() }}</p>
-    <p>拍卖状态: {{ stateLabel }}</p>
+    <template #header>
+      <div class="card-header">
+        <span class="title">{{ props.item.id }}</span>
+      </div>
+    </template>
+    <div class="card-content">
+      <p>描述: {{ props.item.description }}</p>
+      <p>起价: {{ web3.utils.fromWei(props.item.startPrice, 'ether') }} ETH</p>
+      <p>当前最高价格: {{ web3.utils.fromWei(props.item.highestBid, 'ether') }} ETH</p>
+      <p>竞价结束时间: {{ new Date(props.item.endTime * 1000).toLocaleString() }}</p>
+      <p>拍卖状态: {{ stateLabel }}</p>
+      <p>参与人数: {{ props.item.participants }}</p>
+    </div>
     <div class="right-btn">
       <el-button v-if="props.item.state === '0' && isExpired" type="danger" @click="endAuction" :disabled="!isSeller">停止竞价</el-button>
       <el-button v-if="props.item.state === '0' && !isExpired" type="primary" @click="openBidModal">竞价</el-button>

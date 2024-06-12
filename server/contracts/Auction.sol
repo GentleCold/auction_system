@@ -11,6 +11,7 @@ contract Auction {
         uint highestBid;
         uint endTime;
         AuctionState state;
+        uint participants;
     }
 
     enum AuctionState {
@@ -22,6 +23,7 @@ contract Auction {
 
     uint public itemCount;
     mapping(uint => Item) public items;
+    mapping(uint => mapping(address => bool)) public hasBid;
 
     function createAuction(
         string memory description,
@@ -37,7 +39,8 @@ contract Auction {
             highestBidder: payable(address(0)),
             highestBid: 0,
             endTime: block.timestamp + duration,
-            state: AuctionState.InProgress
+            state: AuctionState.InProgress,
+            participants: 0
         });
     }
 
@@ -58,6 +61,11 @@ contract Auction {
 
         item.highestBidder = payable(msg.sender);
         item.highestBid = msg.value;
+
+        if (!hasBid[itemId][msg.sender]) {
+            item.participants++;
+            hasBid[itemId][msg.sender] = true;
+        }
     }
 
     function endAuction(uint itemId) public {

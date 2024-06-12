@@ -16,8 +16,9 @@
               <el-option label="等待收货" value="2"></el-option>
               <el-option label="拍卖完成" value="3"></el-option>
             </el-select>
-            <el-button @click="sortByPrice">根据价格降序</el-button>
+            <el-button @click="sortByPrice">根据最高价格降序</el-button>
             <el-button @click="sortByParticipants">根据参与人数降序</el-button>
+            <el-button @click="sortByTime">根据结束时间降序</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -61,7 +62,9 @@ const filteredItems = computed(() => {
   if (sortType.value === 'price') {
     items = items.sort((a, b) => b.highestBid - a.highestBid);
   } else if (sortType.value === 'participants') {
-    items = items.sort((a, b) => a.participants - b.participants);
+    items = items.sort((a, b) => b.participants - a.participants);
+  } else if (sortType.value === 'time') {
+    items = items.sort((a, b) => b.endTime - a.endTime);
   }
 
   return items;
@@ -73,6 +76,10 @@ const sortByPrice = () => {
 
 const sortByParticipants = () => {
   sortType.value = 'participants';
+};
+
+const sortByTime = () => {
+  sortType.value = 'time';
 };
 
 onMounted(fetchAuctions);

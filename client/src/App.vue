@@ -28,4 +28,10 @@ export default {
 .el-select {
   margin-bottom: 10px;
 }
+.card-header {
+  text-align: center;
+}
+.title {
+  font-weight: bold;
+}
 </style>
