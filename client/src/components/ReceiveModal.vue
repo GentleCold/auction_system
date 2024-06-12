@@ -1,7 +1,9 @@
 <template>
-  <el-dialog title="买家收货" :visible.sync="visible">
+  <el-dialog title="买家收货" v-model="visible" @close="handleClose">
     <p>请确认您已收到货物</p>
-    <el-button type="primary" @click="receiveItem">确认</el-button>
+    <div class="right-btn">
+      <el-button type="primary" @click="receiveItem">确认</el-button>
+    </div>
   </el-dialog>
 </template>
 
@@ -22,4 +24,9 @@ const receiveItem = async () => {
   emit('itemReceived');
   emit('close');
 };
+
+const handleClose = () => {
+  emit('close');
+};
+
 </script>

@@ -11,7 +11,7 @@
           <el-col :span="24">
             <el-select v-model="filterState" placeholder="过滤拍卖状态">
               <el-option label="所有" value=""></el-option>
-              <el-option label="正在拍卖" value="0"></el-option>
+              <el-option label="竞价中" value="0"></el-option>
               <el-option label="等待发货" value="1"></el-option>
               <el-option label="等待收货" value="2"></el-option>
               <el-option label="拍卖完成" value="3"></el-option>
@@ -23,7 +23,7 @@
         <el-divider></el-divider>
         <el-row :gutter="20">
           <el-col v-for="item in filteredItems" :key="item.id" :span="8">
-            <auction-item :item="item" @bidPlaced="fetchAuctions" @itemShipped="fetchAuctions" @itemReceived="fetchAuctions" />
+            <auction-item :item="item" @bidPlaced="fetchAuctions" @itemShipped="fetchAuctions" @itemReceived="fetchAuctions" @auctionEnded="fetchAuctions"/>
           </el-col>
         </el-row>
       </el-main>
@@ -59,7 +59,7 @@ const filteredItems = computed(() => {
   }
 
   if (sortType.value === 'price') {
-    items = items.sort((a, b) => a.startPrice - b.startPrice);
+    items = items.sort((a, b) => b.highestBid - a.highestBid);
   } else if (sortType.value === 'participants') {
     items = items.sort((a, b) => a.participants - b.participants);
   }

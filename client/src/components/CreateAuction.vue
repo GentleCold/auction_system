@@ -11,9 +11,9 @@
       <el-form-item label="竞价时间(秒)">
         <el-input v-model.number="duration" />
       </el-form-item>
-      <el-form-item>
+      <div class="right-btn">
         <el-button type="primary" @click="createAuction">发起拍卖</el-button>
-      </el-form-item>
+      </div>
     </el-form>
   </el-card>
 </template>
@@ -26,10 +26,12 @@ const description = ref('');
 const startPrice = ref(0);
 const duration = ref(0);
 
+const emit = defineEmits(['auctionCreated']);
+
 const createAuction = async () => {
   await auctionContract.methods.createAuction(description.value, web3.utils.toWei(String(startPrice.value), 'ether'), duration.value).send({ from: web3.currentProvider.selectedAddress });
   
   // Emit event to notify parent component
-  $emit('auctionCreated');
+  emit('auctionCreated');
 };
 </script>

@@ -22,4 +22,10 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
+.el-col {
+  margin: 12px 0;
+}
+.el-select {
+  margin-bottom: 10px;
+}
 </style>
