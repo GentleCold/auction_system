@@ -1,6 +1,7 @@
 const MyNFT = artifacts.require("MyNFT");
 
-async function deployAndMint() {
+async function mint() {
+  console.log("abab");
   const accounts = await web3.eth.getAccounts();
   const deployer = accounts[0];
   const recipient = accounts[1];
@@ -12,13 +13,13 @@ async function deployAndMint() {
   console.log("MyNFT contract address:", myNFT.address);
 
   for (let i = 0; i < 10; i++) {
-    const tx = await myNFT.safeMint(recipient, { from: deployer });
-    const tokenId = tx.logs[0].args.tokenId;
+    const tx = await myNFT.methods.safeMint(recipient).send({ from: deployer });
+    const tokenId = tx.events.Transfer.returnValues.tokenId;
     console.log(`NFT #${tokenId.toString()} minted and sent to ${recipient}`);
   }
 }
 
-deployAndMint()
+mint()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);

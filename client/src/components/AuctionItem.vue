@@ -2,7 +2,7 @@
   <el-card>
     <template #header>
       <div class="card-header">
-        <span class="title">{{ props.item.id }}</span>
+        <span class="title">{{ props.item.nftTokenId }}</span>
       </div>
     </template>
     <div class="card-content">
@@ -15,7 +15,7 @@
     </div>
     <div class="right-btn">
       <el-button v-if="props.item.state === '0' && isExpired" type="danger" @click="endAuction" :disabled="!isSeller">停止竞价</el-button>
-      <el-button v-if="props.item.state === '0' && !isExpired" type="primary" @click="openBidModal">竞价</el-button>
+      <el-button v-if="props.item.state === '0' && !isExpired" type="primary" @click="openBidModal" :disabled="isSeller">竞价</el-button>
       <el-button v-if="props.item.state === '1'" type="primary" @click="openShipModal" :disabled="!isSeller">卖家发货</el-button>
       <el-button v-if="props.item.state === '2'" type="primary" @click="openReceiveModal" :disabled="!isBuyer">买家收货</el-button>
     </div>

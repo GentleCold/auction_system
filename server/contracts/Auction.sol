@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
+import "./MyNFT.sol";
+
 contract Auction {
+    MyNFT public nftContract;
     struct Item {
         uint id;
+        uint256 nftTokenId;
         string description;
         uint startPrice;
         address payable seller;
@@ -21,11 +25,16 @@ contract Auction {
         Completed
     }
 
+    constructor(address _nftContract) {
+        nftContract = MyNFT(_nftContract);
+    }
+
     uint public itemCount;
     mapping(uint => Item) public items;
     mapping(uint => mapping(address => bool)) public hasBid;
 
     function createAuction(
+        uint256 _nftTokenId,
         string memory description,
         uint startPrice,
         uint duration
@@ -33,6 +42,7 @@ contract Auction {
         itemCount++;
         items[itemCount] = Item({
             id: itemCount,
+            nftTokenId: _nftTokenId,
             description: description,
             startPrice: startPrice,
             seller: payable(msg.sender),
@@ -42,6 +52,9 @@ contract Auction {
             state: AuctionState.InProgress,
             participants: 0
         });
+
+        // transfer the NFT to the contract
+        nftContract.transferNFT(msg.sender, address(this), _nftTokenId);
     }
 
     function bid(uint itemId) public payable {
@@ -105,6 +118,14 @@ contract Auction {
 
         item.state = AuctionState.Completed;
 
+        // transfer the nft
+        nftContract.transferNFT(
+            address(this),
+            item.highestBidder,
+            item.nftTokenId
+        );
+
+        // transfer the money
         payable(item.seller).transfer(item.highestBid);
     }
 }
