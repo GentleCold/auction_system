@@ -18,6 +18,7 @@
       <el-button v-if="props.item.state === '0' && !isExpired" type="primary" @click="openBidModal" :disabled="isSeller">竞价</el-button>
       <el-button v-if="props.item.state === '1'" type="primary" @click="openShipModal" :disabled="!isSeller">卖家发货</el-button>
       <el-button v-if="props.item.state === '2'" type="primary" @click="openReceiveModal" :disabled="!isBuyer">买家收货</el-button>
+      <el-button v-if="props.item.state === '3'" type="primary">已完成</el-button>
     </div>
     <bid-modal v-if="showBidModal" :item="props.item" @close="showBidModal = false" @bidPlaced="handleBidPlaced" />
     <ship-modal v-if="showShipModal" :item="props.item" @close="showShipModal = false" @itemShipped="handleItemShipped" />
