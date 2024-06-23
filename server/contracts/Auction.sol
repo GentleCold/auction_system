@@ -89,7 +89,17 @@ contract Auction {
             "Auction already completed."
         );
 
-        item.state = AuctionState.AwaitingDelivery;
+        if (item.highestBidder != address(0)) {
+            item.state = AuctionState.AwaitingDelivery;
+        } else {
+            // transfer the NFT to the seller
+            nftContract.transferNFT(
+                address(this),
+                item.seller,
+                item.nftTokenId
+            );
+            item.state = AuctionState.Completed;
+        }
     }
 
     function shipItem(uint itemId) public {
