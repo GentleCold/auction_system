@@ -2,7 +2,7 @@
   <el-card>
     <template #header>
       <div class="card-header">
-        <span class="title">{{ props.item.nftTokenId }}</span>
+        <span class="title">{{ props.item.nftId }}</span>
       </div>
     </template>
     <div class="card-content">
@@ -11,7 +11,7 @@
       <p>当前最高价格: {{ web3.utils.fromWei(props.item.highestBid, 'ether') }} ETH</p>
       <p>竞价结束时间: {{ new Date(props.item.endTime * 1000).toLocaleString() }}</p>
       <p>拍卖状态: {{ stateLabel }}</p>
-      <p>参与人数: {{ props.item.participants }}</p>
+      <p>参与人数: {{ props.item.participantCount }}</p>
     </div>
     <div class="right-btn">
       <el-button v-if="props.item.state === '0' && isExpired" type="danger" @click="endAuction" :disabled="!isSeller">停止竞价</el-button>
@@ -77,7 +77,7 @@ const openReceiveModal = () => {
 };
 
 const endAuction = async () => {
-  await auctionContract.methods.endAuction(props.item.id).send({ from: web3.currentProvider.selectedAddress });
+  await auctionContract.methods.end(props.item.id).send({ from: web3.currentProvider.selectedAddress });
   emit('auctionEnded');
 };
 

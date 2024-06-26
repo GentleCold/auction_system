@@ -1,71 +1,71 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-import "./MyNFT.sol";
+import "./NFT.sol";
 
 contract Auction {
-    MyNFT public nftContract;
+    NFT public nftContract;
     struct Item {
         uint id;
-        uint256 nftTokenId;
+        uint nftId;
         string description;
         uint startPrice;
         address payable seller;
         address payable highestBidder;
         uint highestBid;
         uint endTime;
-        AuctionState state;
-        uint participants;
+        State state;
+        uint participantCount;
     }
 
-    enum AuctionState {
-        InProgress,
-        AwaitingDelivery,
-        AwaitingReceived,
-        Completed
+    enum State {
+        PROGRESS,
+        SHIP,
+        RECEIVE,
+        COMPLETE
     }
 
-    constructor(address _nftContract) {
-        nftContract = MyNFT(_nftContract);
+    constructor(address instance) {
+        nftContract = NFT(instance);
     }
 
-    uint public itemCount;
+    uint public count;
     mapping(uint => Item) public items;
-    mapping(uint => mapping(address => bool)) public hasBid;
+    mapping(uint => mapping(address => bool)) public isBid;
 
-    function createAuction(
-        uint256 _nftTokenId,
+    function create(
+        uint nftId,
         string memory description,
         uint startPrice,
         uint duration
     ) public {
-        itemCount++;
-        items[itemCount] = Item({
-            id: itemCount,
-            nftTokenId: _nftTokenId,
+        count++;
+        items[count] = Item({
+            id: count,
+            nftId: nftId,
             description: description,
             startPrice: startPrice,
             seller: payable(msg.sender),
             highestBidder: payable(address(0)),
             highestBid: 0,
             endTime: block.timestamp + duration,
-            state: AuctionState.InProgress,
-            participants: 0
+            state: State.PROGRESS,
+            participantCount: 0
         });
 
         // transfer the NFT to the contract
-        nftContract.transferNFT(msg.sender, address(this), _nftTokenId);
+        nftContract.transferNFT(msg.sender, address(this), nftId);
     }
 
-    function bid(uint itemId) public payable {
-        Item storage item = items[itemId];
-        require(block.timestamp < item.endTime, "Auction already ended.");
-        require(msg.value > item.highestBid, "There already is a higher bid.");
+    function bid(uint id) public payable {
+        Item storage item = items[id];
         require(
-            msg.value >= item.startPrice,
-            "Bid must be at least the start price."
+            block.timestamp < item.endTime &&
+                msg.value > item.highestBid &&
+                msg.value >= item.startPrice &&
+                msg.sender != item.seller,
+            "Logical error"
         );
-        require(msg.sender != item.seller, "Cannot bid on your own item.");
 
         if (item.highestBidder != address(0)) {
             // return back money
@@ -75,65 +75,49 @@ contract Auction {
         item.highestBidder = payable(msg.sender);
         item.highestBid = msg.value;
 
-        if (!hasBid[itemId][msg.sender]) {
-            item.participants++;
-            hasBid[itemId][msg.sender] = true;
+        if (!isBid[id][msg.sender]) {
+            item.participantCount++;
+            isBid[id][msg.sender] = true;
         }
     }
 
-    function endAuction(uint itemId) public {
-        Item storage item = items[itemId];
-        require(block.timestamp >= item.endTime, "Auction has not ended yet.");
+    function end(uint id) public {
+        Item storage item = items[id];
         require(
-            item.state == AuctionState.InProgress,
-            "Auction already completed."
+            block.timestamp >= item.endTime && item.state == State.PROGRESS,
+            "Logical error"
         );
 
         if (item.highestBidder != address(0)) {
-            item.state = AuctionState.AwaitingDelivery;
+            item.state = State.SHIP;
         } else {
             // transfer the NFT to the seller
-            nftContract.transferNFT(
-                address(this),
-                item.seller,
-                item.nftTokenId
-            );
-            item.state = AuctionState.Completed;
+            nftContract.transferNFT(address(this), item.seller, item.nftId);
+            item.state = State.COMPLETE;
         }
     }
 
-    function shipItem(uint itemId) public {
-        Item storage item = items[itemId];
+    function shipItem(uint id) public {
+        Item storage item = items[id];
         require(
-            msg.sender == item.seller,
-            "Only the seller can call this function."
+            msg.sender == item.seller && item.state == State.SHIP,
+            "Logical error"
         );
-        require(
-            item.state == AuctionState.AwaitingDelivery,
-            "The state should be AwaitingDelivery."
-        );
-        item.state = AuctionState.AwaitingReceived;
+
+        item.state = State.RECEIVE;
     }
 
-    function receiveItem(uint itemId) public {
-        Item storage item = items[itemId];
+    function receiveItem(uint id) public {
+        Item storage item = items[id];
         require(
-            msg.sender == item.highestBidder,
-            "Only the buyer can call this function."
-        );
-        require(
-            item.state == AuctionState.AwaitingReceived,
-            "The state should be AwaitingReceived."
+            msg.sender == item.highestBidder && item.state == State.RECEIVE,
+            "Logical error!"
         );
 
-        item.state = AuctionState.Completed;
+        item.state = State.COMPLETE;
 
         // transfer the nft
-        nftContract.transferNFT(
-            address(this),
-            item.highestBidder,
-            item.nftTokenId
-        );
+        nftContract.transferNFT(address(this), item.highestBidder, item.nftId);
 
         // transfer the money
         payable(item.seller).transfer(item.highestBid);

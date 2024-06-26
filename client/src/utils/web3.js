@@ -1,19 +1,13 @@
 import Web3 from 'web3'
 import AuctionArtifact from '../../../server/build/contracts/Auction.json'
-import NFTArtifact from '../../../server/build/contracts/MyNFT.json'
+import NFTArtifact from '../../../server/build/contracts/NFT.json'
 
 let web3
 let auctionContract
 let nftContract
 
-if (window.ethereum) {
-  web3 = new Web3(window.ethereum)
-  await window.ethereum.enable()
-} else if (window.web3) {
-  web3 = new Web3(window.web3.currentProvider)
-} else {
-  console.error('No Ethereum browser extension detected.')
-}
+web3 = new Web3(window.ethereum)
+await window.ethereum.enable()
 
 const networkId = await web3.eth.net.getId()
 

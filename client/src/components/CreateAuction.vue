@@ -38,7 +38,7 @@ onMounted(async () => {
 });
 
 const loadOwnedNFTs = async () => {
-  const ownedTokens = await nftContract.methods.getOwnedNFTs(web3.currentProvider.selectedAddress).call();
+  const ownedTokens = await nftContract.methods.getAll(web3.currentProvider.selectedAddress).call();
   ownedNFTs.value = ownedTokens.map(tokenId => ({ tokenId }));
 };
 
@@ -47,7 +47,7 @@ const createAuction = async () => {
     return;
   }
 
-  await auctionContract.methods.createAuction(
+  await auctionContract.methods.create(
     selectedNFT.value,
     description.value,
     web3.utils.toWei(String(startPrice.value), 'ether'),

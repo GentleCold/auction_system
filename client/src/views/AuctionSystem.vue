@@ -43,7 +43,7 @@ const filterState = ref('');
 const sortType = ref('');
 
 const fetchAuctions = async () => {
-  const itemCount = await auctionContract.methods.itemCount().call();
+  const itemCount = await auctionContract.methods.count().call();
   auctions.value = [];
 
   for (let i = 1; i <= itemCount; i++) {
@@ -62,7 +62,7 @@ const filteredItems = computed(() => {
   if (sortType.value === 'price') {
     items = items.sort((a, b) => b.highestBid - a.highestBid);
   } else if (sortType.value === 'participants') {
-    items = items.sort((a, b) => b.participants - a.participants);
+    items = items.sort((a, b) => b.participantCount - a.participantCount);
   } else if (sortType.value === 'time') {
     items = items.sort((a, b) => b.endTime - a.endTime);
   }
